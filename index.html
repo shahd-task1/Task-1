@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Task 2 - Student System</title>
+</head>
+<body>
+  <h1>افتحي الـ Console عشان تشوفي النتيجة</h1>
+  <p>دوسي كليك يمين - Inspect - Console</p>
+
+<script>
+// 1. كلاس الطالب
+class Student {
+  constructor(id, name, grades, attendance) {
+    this.id = id;
+    this.name = name;
+    this.grades = grades;
+    this.attendance = attendance;
+  }
+
+  // حساب المتوسط بـ reduce
+  getAverage() {
+    let sum = this.grades.reduce((total, grade) => total + grade, 0);
+    return sum / this.grades.length;
+  }
+
+  // التقدير بـ if / else
+  getGrade() {
+    let avg = this.getAverage();
+    if (avg >= 90) return "A";
+    else if (avg >= 80) return "B";
+    else if (avg >= 70) return "C";
+    else if (avg >= 60) return "D";
+    else if (avg >= 50) return "E";
+    else return "F";
+  }
+
+  // النتيجة النهائية بـ &&
+  getStatus() {
+    let avg = this.getAverage();
+    if (avg >= 50 && this.attendance >= 75) {
+      return "ناجح";
+    } else {
+      return "يحتاج مراجعة";
+    }
+  }
+}
+
+// 3. مصفوفة الطلاب - 4 طلاب
+let studentsList = [
+  new Student(1, "Shahd", [85, 90, 78], 95),
+  new Student(2, "Ahmed", [72, 68, 75], 80),
+  new Student(3, "Sara", [42, 45, 48], 70), // متعثر
+  new Student(4, "Omar", [40, 44, 47], 85)  // متعثر
+];
+
+// 5. طباعة تقرير كل طالب
+console.log("=== تقرير الطلاب ===");
+studentsList.forEach(student => {
+  console.log(`الاسم: ${student.name} | المتوسط: ${student.getAverage().toFixed(2)} | التقدير: ${student.getGrade()} | النتيجة: ${student.getStatus()}`);
+});
+
+// 4. لجنة الرأفة
+// الاستخراج بـ filter : متوسط بين 40 و 49
+let struggling = studentsList.filter(student => {
+  let avg = student.getAverage();
+  return avg >= 40 && avg <= 49;
+});
+
+// المعالجة بـ map : + 5 درجات رأفة
+let afterMercy = struggling.map(student => {
+  return {
+    name: student.name,
+    oldAverage: student.getAverage(),
+    newAverage: student.getAverage() + 5
+  };
+});
+
+console.log("=== الطلاب المتعثرين بعد الرأفة ===");
+console.log(afterMercy);
+
+// التحليل بـ reduce : جمع المتوسطات الجديدة
+let totalNew = afterMercy.reduce((total, s) => total + s.newAverage, 0);
+
+// درع حماية من القسمة على صفر
+let mercyAverage = afterMercy.length > 0 ? totalNew / afterMercy.length : 0;
+
+console.log(`متوسط المتعثرين بعد الرأفة: ${mercyAverage.toFixed(2)}`);
+</script>
+</body>
+</html>
